@@ -30,15 +30,22 @@ class UserStore {
     console.log("fetchUsers");
     const userAccessToken = LoginStore.getUserAccessToken();
     console.log(userAccessToken);
+    const url =
+      "http://pankaj.moolrajani.sb.intern.monoxor.com:5001/ewallet/users/search";
+    // const url = `https://ruywk.sse.codesandbox.io/users/search`
     try {
-      const res = await axios.post(
-        `https://ruywk.sse.codesandbox.io/users/search`,
-        {
-          headers: {
-            access_token: userAccessToken
-          }
+      const res = await axios({
+        url: url,
+        method: "POST",
+        data: {
+          companyId: 501,
+          groupId: 101
+        },
+        headers: {
+          "content-type": "application/json",
+          access_token: "userAccessToken"
         }
-      );
+      });
       console.log(res);
       const users = res.data;
       return this.setUsers(users);
@@ -59,6 +66,7 @@ class UserStore {
     try {
       const res = await axios.get(
         `https://ruywk.sse.codesandbox.io/company/${companyId}`,
+        {},
         {
           headers: {
             access_token: userAccessToken
