@@ -12,7 +12,9 @@ class UserStore {
   }
 
   async fetchUser() {
+    console.log("fetchUser");
     const username = this.getUsername();
+    console.log(username);
     try {
       const res = await axios.get(
         `https://ruywk.sse.codesandbox.io/user/${username}`
@@ -25,10 +27,19 @@ class UserStore {
   }
 
   async fetchUsers() {
+    console.log("fetchUsers");
+    const userAccessToken = LoginStore.getUserAccessToken();
+    console.log(userAccessToken);
     try {
       const res = await axios.post(
-        `https://ruywk.sse.codesandbox.io/users/search`
+        `https://ruywk.sse.codesandbox.io/users/search`,
+        {
+          headers: {
+            access_token: userAccessToken
+          }
+        }
       );
+      console.log(res);
       const users = res.data;
       return this.setUsers(users);
     } catch (err) {

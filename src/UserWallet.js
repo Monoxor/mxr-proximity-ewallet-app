@@ -36,7 +36,9 @@ class UserWallet extends Component {
     const user = UserStore.getUser();
     const company = UserStore.getUserCompany();
     const wallet = UserStore.getUserWallet();
-
+    if (!user) {
+      return null;
+    }
     return (
       <Box style={{ width: "100%", textAlign: "left" }}>
         <AppBar />

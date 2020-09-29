@@ -8,7 +8,7 @@ import LoginStore from "./stores/Login.store";
 
 class Company extends Component {
   async componentDidMount() {
-    await UserStore.fetchUserCompany();
+    // await UserStore.fetchUserCompany();
     await UserStore.fetchUsers();
   }
 
@@ -38,7 +38,6 @@ class Company extends Component {
     return (
       <Box style={{ width: "100%", textAlign: "left" }}>
         <AppBar />
-        {LoginStore.getUserAccessToken()}
         <Box style={{ padding: 20, fontSize: 20, color: theme.primary }}>
           Company: {company ? company.name : null}
         </Box>

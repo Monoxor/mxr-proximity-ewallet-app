@@ -5,6 +5,7 @@ import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import LoginStore from "./stores/Login.store";
+import UserStore from "./stores/User.store";
 
 class Login extends Component {
   render() {
@@ -36,13 +37,18 @@ class Login extends Component {
               backgroundColor: theme.primary,
               color: theme.textSecondaryLight
             }}
-            onClick={() => {
+            onClick={async () => {
               console.log("click");
               const password = LoginStore.getPassword();
               console.log(password);
               if (password && password === "pass") {
                 console.log("pass match");
                 const username = LoginStore.getUsername();
+                UserStore.setUsername(username);
+                console.log(username);
+                const user = await UserStore.fetchUser();
+                console.log(user);
+                UserStore.setUser(user);
                 const userAccessToken = LoginStore.fetchUserAccessToken();
                 LoginStore.setUserAccessToken(userAccessToken);
                 window.location.assign(`/user/${username}/wallet`);
