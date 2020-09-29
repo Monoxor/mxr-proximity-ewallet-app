@@ -1,6 +1,7 @@
 import { decorate, observable } from "mobx";
 import axios from "axios";
 import LoginStore from "./Login.store";
+import ProximityStore from "./Proximity.store";
 
 class UserStore {
   constructor() {
@@ -12,27 +13,52 @@ class UserStore {
   }
 
   async fetchUser() {
-    console.log("fetchUser");
     const username = this.getUsername();
-    console.log(username);
+    if (!username) {
+      return
+    }
+    const isProximityEnabled = ProximityStore.getIsProximityEnabled()
+    const userAccessToken = LoginStore.getUserAccessToken();
+    let url = `https://ruywk.sse.codesandbox.io/user/${username}`
+    if (isProximityEnabled == "true") {
+      url = `http://pankaj.moolrajani.sb.intern.monoxor.com:5002/ewallet/user/${username}`
+    }
     try {
-      const res = await axios.get(
-        `https://ruywk.sse.codesandbox.io/user/${username}`
-      );
+      const res = await axios({
+        url: url,
+        method: "get",
+        data: {},
+        headers: {
+          "content-type": "application/json",
+          access_token: userAccessToken
+        }
+      });
+      if (res.status == 401) {
+        console.log('setting unauthorized')
+        ProximityStore.setIsUnauthorized(true)
+        return
+      } 
       this.setUser(res.data);
     } catch (err) {
-      console.log(err);
+      if (err.message.includes(401)) {
+        ProximityStore.setIsUnauthorized(true)
+      }
     }
     return null;
   }
 
   async fetchUsers() {
-    console.log("fetchUsers");
+    console.log('fetchUsers')
+    
+    const isProximityEnabled=ProximityStore.getIsProximityEnabled()
+    
     const userAccessToken = LoginStore.getUserAccessToken();
-    console.log(userAccessToken);
-    const url =
-      "http://pankaj.moolrajani.sb.intern.monoxor.com:5001/ewallet/users/search";
-    // const url = `https://ruywk.sse.codesandbox.io/users/search`
+    let url = `https://ruywk.sse.codesandbox.io/users/search`
+    console.log(isProximityEnabled)
+    if (isProximityEnabled == "true") {
+      url = "http://pankaj.moolrajani.sb.intern.monoxor.com:5001/ewallet/users/search";
+    } 
+    console.log(`ur: ${url}`)
     try {
       const res = await axios({
         url: url,
@@ -43,10 +69,9 @@ class UserStore {
         },
         headers: {
           "content-type": "application/json",
-          access_token: "userAccessToken"
+          access_token: userAccessToken
         }
       });
-      console.log(res);
       const users = res.data;
       return this.setUsers(users);
     } catch (err) {
@@ -55,10 +80,11 @@ class UserStore {
   }
 
   async fetchUserCompany() {
-    console.log("fetchUserCompany");
     const userAccessToken = LoginStore.getUserAccessToken();
-    console.log(userAccessToken);
     const user = this.getUser();
+    if (!user) {
+      return
+    }
     const companyId = user.companyId;
     if (!user) {
       return;
@@ -108,16 +134,11 @@ class UserStore {
 
   setUser(value) {
     this.user = value;
-    localStorage.setItem("user", JSON.stringify(value));
     return this.user;
   }
 
   getUser() {
-    let user = this.user;
-    if (!user) {
-      user = JSON.parse(localStorage.getItem("user"));
-    }
-    return user;
+    return this.user
   }
 
   setUserCompany(value) {

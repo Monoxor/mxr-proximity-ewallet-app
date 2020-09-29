@@ -5,6 +5,7 @@ class LoginStore {
     let username = null;
     let password = null;
     let userAccessToken = null;
+    let user = null;
   }
 
   fetchUserAccessToken() {
@@ -60,12 +61,27 @@ class LoginStore {
     }
     return userAccessToken;
   }
+
+  setUser(value) {
+    this.user = value;
+    localStorage.setItem("user", JSON.stringify(value));
+    return this.user;
+  }
+
+  getUser() {
+    let user = this.user;
+    if (!user) {
+      user = JSON.parse(localStorage.getItem("user"));
+    }
+    return user;
+  }
 }
 
 decorate(LoginStore, {
   username: observable,
   password: observable,
-  userAccessToken: observable
+  userAccessToken: observable,
+  user: observable
 });
 
 export default new LoginStore();

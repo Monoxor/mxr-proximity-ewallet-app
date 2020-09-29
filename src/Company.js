@@ -8,7 +8,7 @@ import LoginStore from "./stores/Login.store";
 
 class Company extends Component {
   async componentDidMount() {
-    // await UserStore.fetchUserCompany();
+    await UserStore.fetchUserCompany();
     await UserStore.fetchUsers();
   }
 
@@ -20,13 +20,28 @@ class Company extends Component {
     let userList = [];
     users.map((user) => {
       userList.push(
-        <Box key={Math.random()} style={{ padding: 10 }}>
-          {user.id}.) {user.name}
-        </Box>
+        <tr key={Math.random()}>
+          <td style={{ padding: 5 }}>{user.id}</td>
+          <td>{user.name}</td>
+          <td>{user.companyId}</td>
+          <td>{user.walletId}</td>
+        </tr>
       );
       return null;
     });
-    return userList;
+    return (
+      <table>
+        <tbody>
+        <tr>
+          <th style={{width:70}}>User ID</th>
+          <th style={{width:150}}>User</th>
+          <th style={{width:100}}>Company</th>
+          <th style={{width:50}}>Balance</th>
+        </tr>
+        {userList}
+        </tbody>
+      </table>
+    );
   }
 
   render() {

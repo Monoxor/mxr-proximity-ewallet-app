@@ -38,17 +38,13 @@ class Login extends Component {
               color: theme.textSecondaryLight
             }}
             onClick={async () => {
-              console.log("click");
               const password = LoginStore.getPassword();
-              console.log(password);
               if (password && password === "pass") {
-                console.log("pass match");
                 const username = LoginStore.getUsername();
                 UserStore.setUsername(username);
-                console.log(username);
                 const user = await UserStore.fetchUser();
-                console.log(user);
                 UserStore.setUser(user);
+                LoginStore.setUser(user)
                 const userAccessToken = LoginStore.fetchUserAccessToken();
                 LoginStore.setUserAccessToken(userAccessToken);
                 window.location.assign(`/user/${username}/wallet`);

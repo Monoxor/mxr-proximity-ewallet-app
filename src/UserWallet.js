@@ -5,6 +5,7 @@ import Box from "@material-ui/core/Box";
 import AppBar from "./components/AppBar";
 
 import UserStore from "./stores/User.store";
+import ProximityStore from "./stores/Proximity.store";
 
 class UserWallet extends Component {
   async componentDidMount() {
@@ -14,6 +15,7 @@ class UserWallet extends Component {
     await UserStore.fetchUserCompany();
     await UserStore.fetchUserWallet();
   }
+
   _renderTransactions() {
     const wallet = UserStore.getUserWallet();
     if (!wallet || !wallet.transactions) {
@@ -31,34 +33,50 @@ class UserWallet extends Component {
     return transactionsList;
   }
 
-  render() {
+  _renderWalletPage() {
+    console.log('_renderWalletPage')
     const username = UserStore.getUsername();
     const user = UserStore.getUser();
     const company = UserStore.getUserCompany();
     const wallet = UserStore.getUserWallet();
-    if (!user) {
+    const isUnauthorized = ProximityStore.getIsUnauthorized()
+    console.log(isUnauthorized)
+    if (isUnauthorized) {
+      return (
+        <Box style = {{marginTop: 30, marginLeft: 30}}>
+          <Box style = {{color: 'red', fontSize: 30}}>Unauthorized !</Box>
+        </Box>
+      )
+    }
+    if (!user || !company || !wallet) {
       return null;
     }
     return (
+      <Box style={{ paddingLeft: 20 }}>
+        <Box style={{ marginTop: 100, fontSize: 40, color: theme.primary }}>
+          {user.name}'s Wallet
+        </Box>
+        <Box style={{ marginTop: 50, fontSize: 20 }}>
+          Your balance is: ${wallet ? wallet.balance : null}
+        </Box>
+        <Box style={{ marginTop: 10 }}>
+          Company: {company ? company.name : null}
+        </Box>
+        <Box style={{ marginTop: 30, marginBottom: 20 }}>
+          <Box>
+            <b>Transactions: </b>
+          </Box>
+          <Box style={{ marginTop: 10 }}>{this._renderTransactions()}</Box>
+        </Box>
+      </Box>
+      
+    )
+  }
+  render() {
+    return (
       <Box style={{ width: "100%", textAlign: "left" }}>
         <AppBar />
-        <Box style={{ paddingLeft: 20 }}>
-          <Box style={{ marginTop: 100, fontSize: 40, color: theme.primary }}>
-            {user.name}'s Wallet
-          </Box>
-          <Box style={{ marginTop: 50, fontSize: 20 }}>
-            Your balance is: ${wallet ? wallet.balance : null}
-          </Box>
-          <Box style={{ marginTop: 10 }}>
-            Company: {company ? company.name : null}
-          </Box>
-          <Box style={{ marginTop: 30, marginBottom: 20 }}>
-            <Box>
-              <b>Transactions: </b>
-            </Box>
-            <Box style={{ marginTop: 10 }}>{this._renderTransactions()}</Box>
-          </Box>
-        </Box>
+        {this._renderWalletPage()}
       </Box>
     );
   }

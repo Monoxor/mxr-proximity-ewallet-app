@@ -1,0 +1,11 @@
+version: '3'
+services:
+  mxr-proximity-demo-webapp:
+    build: .
+    image: mxr-proximity-demo-webapp
+    container_name: mxr-proximity-demo-webapp
+    ports:
+      - 2080:2080
+    volumes:
+      - ./:/app
+    command: /bin/sleep 216000

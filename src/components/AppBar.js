@@ -4,11 +4,13 @@ import theme from "./../theme";
 import Box from "@material-ui/core/Box";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import UserStore from "./../stores/User.store";
+import LoginStore from "./../stores/Login.store";
+import ProximityStore from "../stores/Proximity.store";
 
 class AppBar extends Component {
   render() {
-    const user = UserStore.getUser();
+    const isProximityEnabled = ProximityStore.getIsProximityEnabled()
+    const user = LoginStore.getUser();
     return (
       <Box
         style={{
@@ -29,6 +31,19 @@ class AppBar extends Component {
           }}
         >
           eWallet
+        </Box>
+        <Box style={{ flex: 5, textAlign: "right", marginRight: 30}}>
+          <input 
+            style = {{marginBottom: 5}} type='checkbox' id='isProximityEnabled' checked={isProximityEnabled == "true" ? true : false} 
+            onChange = {()=>{
+              if (isProximityEnabled == "true") {
+                ProximityStore.setIsProximityEnabled("false")
+              } else {
+                ProximityStore.setIsProximityEnabled("true")
+              }
+            }}
+          />
+          Proximity Enabled
         </Box>
         <Box style={{ flex: 1, textAlign: "right", marginRight: 10 }}>
           Hi {user ? user.name : null} !
