@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import { observer } from "mobx-react";
+import {toJS} from "mobx";
 import theme from "./theme";
 import Box from "@material-ui/core/Box";
 import AppBar from "./components/AppBar";
-
 import UserStore from "./stores/User.store";
 import ProximityStore from "./stores/Proximity.store";
-
 class UserWallet extends Component {
   async componentDidMount() {
     const username = this.props.match.params.username;
@@ -17,18 +16,23 @@ class UserWallet extends Component {
   }
 
   _renderTransactions() {
-    const wallet = UserStore.getUserWallet();
+    const wallet = toJS(UserStore.getUserWallet());
     if (!wallet || !wallet.transactions || wallet.transactions.length < 1) {
       return <Box style = {{color: 'red'}}>Unauthorized !</Box>;
     }
     let transactionsList = [];
-    wallet.transactions.map((transaction) => {
+    let transactions = wallet.transactions
+    let isProximityEnabled = ProximityStore.getIsProximityEnabled()
+    if (isProximityEnabled == "true") {
+      transactions = wallet.transactions[0]
+      console.log(transactions)
+    }
+    transactions.map((transaction) => {
       transactionsList.push(
         <Box key={Math.random()}>
           {transaction.productName} - {transaction.price}
         </Box>
       );
-      return;
     });
     return transactionsList;
   }
@@ -50,6 +54,7 @@ class UserWallet extends Component {
     if (!user || !company || !wallet) {
       return null;
     }
+    const transactions = this._renderTransactions()
     return (
       <Box style={{ paddingLeft: 20 }}>
         <Box style={{ marginTop: 100, fontSize: 40, color: theme.primary }}>
@@ -65,7 +70,7 @@ class UserWallet extends Component {
           <Box>
             <b>Transactions: </b>
           </Box>
-          <Box style={{ marginTop: 10 }}>{this._renderTransactions()}</Box>
+          <Box style={{ marginTop: 10 }}>{transactions}</Box>
         </Box>
       </Box>
       
