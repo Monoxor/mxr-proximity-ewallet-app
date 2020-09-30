@@ -18,8 +18,8 @@ class UserWallet extends Component {
 
   _renderTransactions() {
     const wallet = UserStore.getUserWallet();
-    if (!wallet || !wallet.transactions) {
-      return;
+    if (!wallet || !wallet.transactions || wallet.transactions.length < 1) {
+      return <Box style = {{color: 'red'}}>Unauthorized !</Box>;
     }
     let transactionsList = [];
     wallet.transactions.map((transaction) => {
@@ -40,7 +40,6 @@ class UserWallet extends Component {
     const company = UserStore.getUserCompany();
     const wallet = UserStore.getUserWallet();
     const isUnauthorized = ProximityStore.getIsUnauthorized()
-    console.log(isUnauthorized)
     if (isUnauthorized) {
       return (
         <Box style = {{marginTop: 30, marginLeft: 30}}>

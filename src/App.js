@@ -7,8 +7,9 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import UserWallet from "./UserWallet";
 import Login from "./Login";
-import LoginStore from "./stores/Login.store";
 import Company from "./Company";
+import Transfer from "./Transfer";
+
 
 class App extends Component {
   _renderRoutes() {
@@ -17,6 +18,7 @@ class App extends Component {
         <Switch>
           <Route path="/company/:companyId" component={Company} />
           <Route path="/user/:username/wallet" component={UserWallet} />
+          <Route path="/user/:username/transfer" component={Transfer} />
           <Route path="/login" component={Login} />
         </Switch>
       </Router>

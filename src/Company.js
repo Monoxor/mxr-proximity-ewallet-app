@@ -5,6 +5,8 @@ import Box from "@material-ui/core/Box";
 import AppBar from "./components/AppBar";
 import UserStore from "./stores/User.store";
 import LoginStore from "./stores/Login.store";
+import ProximityStore from "./stores/Proximity.store"
+
 
 class Company extends Component {
   async componentDidMount() {
@@ -44,20 +46,41 @@ class Company extends Component {
     );
   }
 
-  render() {
+  _renderCompanyPage() {
     const users = UserStore.getUsers();
     const company = UserStore.getUserCompany();
     if (!users) {
       return <Box>Loading...</Box>;
     }
     return (
-      <Box style={{ width: "100%", textAlign: "left" }}>
-        <AppBar />
+      <Box>
         <Box style={{ padding: 20, fontSize: 20, color: theme.primary }}>
           Company: {company ? company.name : null}
         </Box>
         <Box style={{ paddingLeft: 20, fontSize: 20 }}>Users</Box>
         <Box style={{ paddingLeft: 20 }}>{this._renderUsers()}</Box>
+      </Box>
+    )
+  }
+  
+  _renderUnauthorizedCard() {
+    const isUnauthorized = ProximityStore.getIsUnauthorized()
+    if (isUnauthorized) {
+      return (
+        <Box style = {{marginTop: 30, marginLeft: 30}}>
+          <Box style = {{color: 'red', fontSize: 30}}>Unauthorized !</Box>
+        </Box>
+      )
+    }
+  }
+    
+    
+  render() { 
+    const isUnauthorized = ProximityStore.getIsUnauthorized()
+    return (
+      <Box style={{ width: "100%", textAlign: "left" }}>
+        <AppBar />
+        {isUnauthorized ? this._renderUnauthorizedCard() : this._renderCompanyPage()}
       </Box>
     );
   }
