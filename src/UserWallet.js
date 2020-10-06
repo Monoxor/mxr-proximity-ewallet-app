@@ -27,6 +27,10 @@ class UserWallet extends Component {
       transactions = wallet.transactions[0]
       console.log(transactions)
     }
+    transactions = null
+    if (!transactions) {
+      return null
+    }
     transactions.map((transaction) => {
       transactionsList.push(
         <Box key={Math.random()}>
