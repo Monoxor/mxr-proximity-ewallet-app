@@ -16,21 +16,18 @@ class UserWallet extends Component {
   }
 
   _renderTransactions() {
-    const wallet = toJS(UserStore.getUserWallet());
+    const wallet = UserStore.getUserWallet();
+    console.log(wallet)
     if (!wallet || !wallet.transactions || wallet.transactions.length < 1) {
       return <Box style = {{color: 'red'}}>Unauthorized !</Box>;
     }
     let transactionsList = [];
     let transactions = wallet.transactions
     let isProximityEnabled = ProximityStore.getIsProximityEnabled()
-    if (isProximityEnabled == "true") {
-      transactions = wallet.transactions[0]
-      console.log(transactions)
-    }
-    transactions = null
-    if (!transactions) {
+    if (!transactions || transactions.length === 0) {
       return null
     }
+    
     transactions.map((transaction) => {
       transactionsList.push(
         <Box key={Math.random()}>

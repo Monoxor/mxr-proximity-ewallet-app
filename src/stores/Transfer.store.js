@@ -71,9 +71,9 @@ class TransferStore {
     this.setToUser(toUser)
     const isProximityEnabled=ProximityStore.getIsProximityEnabled()
     const userAccessToken = LoginStore.getUserAccessToken();
-    let url = 'http://do-prod.monoxor.com:5000/transfer'
+    let url = 'http://kushal.parikh.sb.intern.monoxor.com:5000/transfer'
     if (isProximityEnabled == "true") {
-      url = "http://pankaj.moolrajani.sb.intern.monoxor.com:5001/ewallet/users/search";
+      url = "http://kushal.parikh.sb.intern.monoxor.com5001/ewallet/users/search";
     } 
     try {
       const res = await axios({

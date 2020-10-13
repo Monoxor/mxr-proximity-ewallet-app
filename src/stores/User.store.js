@@ -19,9 +19,9 @@ class UserStore {
     }
     const isProximityEnabled = ProximityStore.getIsProximityEnabled()
     const userAccessToken = LoginStore.getUserAccessToken();
-    let url = `http://do-prod.monoxor.com:5000/user/${username}`
+    let url = `http://kushal.parikh.sb.intern.monoxor.com:5000/user/${username}`
     if (isProximityEnabled == "true") {
-      url = `http://pankaj.moolrajani.sb.intern.monoxor.com:5002/ewallet/user/${username}`
+      url = `http://kushal.parikh.sb.intern.monoxor.com:5002/ewallet/user/${username}`
     }
     try {
       const res = await axios({
@@ -53,9 +53,9 @@ class UserStore {
     const isProximityEnabled=ProximityStore.getIsProximityEnabled()
     
     const userAccessToken = LoginStore.getUserAccessToken();
-    let url = 'http://do-prod.monoxor.com:5000/users/search'
+    let url = 'http://kushal.parikh.sb.intern.monoxor.com:5000/users/search'
     if (isProximityEnabled == "true") {
-      url = "http://pankaj.moolrajani.sb.intern.monoxor.com:5001/ewallet/users/search";
+      url = "http://kushal.parikh.sb.intern.monoxor.com:5001/ewallet/users/search";
     } 
     try {
       const res = await axios({
@@ -97,7 +97,7 @@ class UserStore {
     }
     try {
       const res = await axios.get(
-        `http://do-prod.monoxor.com:5000/company/${companyId}`,
+        `http://kushal.parikh.sb.intern.monoxor.com:5000/company/${companyId}`,
         {},
         {
           headers: {
@@ -120,9 +120,9 @@ class UserStore {
     if (!user) {
       return
     }
-    let url = `http://do-prod.monoxor.com:5000/wallet/${user.walletId}`
+    let url = `http://kushal.parikh.sb.intern.monoxor.com:5000/wallet/${user.walletId}`
     if (isProximityEnabled == "true") {
-      url = `http://pankaj.moolrajani.sb.intern.monoxor.com:5003/ewallet/wallet/${user.walletId}`
+      url = `http://kushal.parikh.sb.intern.monoxor.com:5003/ewallet/wallet/${user.walletId}`
     }
     try {
       const res = await axios({
@@ -135,6 +135,7 @@ class UserStore {
         }
       });
       if (res.status == 401) {
+        console.log(res)
         console.log('setting unauthorized')
         ProximityStore.setIsUnauthorized(true)
         return
@@ -156,7 +157,7 @@ class UserStore {
     const walletId = user.walletId;
     try {
       const res = await axios.get(
-        `http://do-prod.monoxor.com:5000/wallet/${walletId}`
+        `http://kushal.parikh.sb.intern.monoxor.com:5000/wallet/${walletId}`
       );
       const wallet = res.data;
       return this.setUserWallet(wallet);
