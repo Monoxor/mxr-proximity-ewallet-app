@@ -1,59 +1,64 @@
-import React, { Component } from "react";
-import { observer } from "mobx-react";
-import {toJS} from "mobx";
-import theme from "./theme";
-import Box from "@material-ui/core/Box";
-import AppBar from "./components/AppBar";
-import UserStore from "./stores/User.store";
-import ProximityStore from "./stores/Proximity.store";
+import React, { Component } from 'react'
+import { observer } from 'mobx-react'
+import { toJS } from 'mobx'
+import theme from './theme'
+import Box from '@material-ui/core/Box'
+import AppBar from './components/AppBar'
+import UserStore from './stores/User.store'
+import ProximityStore from './stores/Proximity.store'
+
+
 class UserWallet extends Component {
   async componentDidMount() {
-    const username = this.props.match.params.username;
-    UserStore.setUsername(username);
-    await UserStore.fetchUser();
-    await UserStore.fetchUserCompany();
-    await UserStore.fetchUserWallet();
+    const username = this.props.match.params.username
+    UserStore.setUsername(username)
+    await UserStore.fetchUser()
+    await UserStore.fetchUserCompany()
+    await UserStore.fetchUserWallet()
   }
 
+
   _renderTransactions() {
-    const wallet = UserStore.getUserWallet();
+    const wallet = UserStore.getUserWallet()
     console.log(wallet)
     if (!wallet || !wallet.transactions || wallet.transactions.length < 1) {
-      return <Box style = {{color: 'red'}}>Unauthorized !</Box>;
+      return <Box style={{ color: 'red' }}>Unauthorized !</Box>
     }
-    let transactionsList = [];
+    let transactionsList = []
     let transactions = wallet.transactions
+    console.log(toJS(transactions))
     let isProximityEnabled = ProximityStore.getIsProximityEnabled()
     if (!transactions || transactions.length === 0) {
       return null
     }
-    
+
     transactions.map((transaction) => {
       transactionsList.push(
         <Box key={Math.random()}>
           {transaction.productName} - {transaction.price}
         </Box>
-      );
-    });
-    return transactionsList;
+      )
+    })
+    return transactionsList
   }
+
 
   _renderWalletPage() {
     console.log('_renderWalletPage')
-    const username = UserStore.getUsername();
-    const user = UserStore.getUser();
-    const company = UserStore.getUserCompany();
-    const wallet = UserStore.getUserWallet();
+    const username = UserStore.getUsername()
+    const user = UserStore.getUser()
+    const company = UserStore.getUserCompany()
+    const wallet = UserStore.getUserWallet()
     const isUnauthorized = ProximityStore.getIsUnauthorized()
     if (isUnauthorized) {
       return (
-        <Box style = {{marginTop: 30, marginLeft: 30}}>
-          <Box style = {{color: 'red', fontSize: 30}}>Unauthorized !</Box>
+        <Box style={{ marginTop: 30, marginLeft: 30 }}>
+          <Box style={{ color: 'red', fontSize: 30 }}>Unauthorized !</Box>
         </Box>
       )
     }
     if (!user || !company || !wallet) {
-      return null;
+      return null
     }
     const transactions = this._renderTransactions()
     return (
@@ -74,17 +79,17 @@ class UserWallet extends Component {
           <Box style={{ marginTop: 10 }}>{transactions}</Box>
         </Box>
       </Box>
-      
     )
   }
   render() {
     return (
-      <Box style={{ width: "100%", textAlign: "left" }}>
+      <Box style={{ width: '100%', textAlign: 'left' }}>
         <AppBar />
         {this._renderWalletPage()}
       </Box>
-    );
+    )
   }
 }
 
-export default observer(UserWallet);
+
+export default observer(UserWallet)
