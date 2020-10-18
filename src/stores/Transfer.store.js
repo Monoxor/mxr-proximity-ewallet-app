@@ -101,7 +101,6 @@ class TransferStore {
           access_token: userAccessToken
         }
       })
-      console.log(res.data)
       return { status: 'dev' }
     } catch (err) {
       console.log(err)

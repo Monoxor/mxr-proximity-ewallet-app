@@ -9,12 +9,10 @@ class LoginStore {
   }
 
   fetchUserAccessToken() {
-    console.log("fetchUserAccessToken");
     const username = this.getUsername();
     let accessToken;
     switch (username) {
       case "mark":
-        console.log("mark");
         accessToken =
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im5hbWUiOiJNYXJrIiwidXNlcm5hbWUiOiJtYXJrIiwicm9sZSI6IlBSSU1BUlkiLCJjb21wYW55SWQiOjUwMSwiZ3JvdXBJZCI6MTAxLCJ3YWxsZXRJZCI6IjYwMSJ9fQ.Td1ntbFAPHiZu68TsQrqE-J3opT576MYITsvb67aYo4";
         break;
@@ -26,7 +24,6 @@ class LoginStore {
         break;
     }
     this.setUserAccessToken(accessToken);
-    console.log(accessToken);
     return accessToken;
   }
 
