@@ -8,62 +8,10 @@ import Button from '@material-ui/core/Button'
 import AppBar from './components/AppBar'
 import LoginStore from './stores/Login.store'
 import TransferStore from './stores/Transfer.store'
-const getRandomString = (length) => {
-  var result = ''
-  var characters = 'abcdefghijklmnopqrstuvwxyz'
-  var charactersLength = characters.length
-  for (var i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength))
-  }
-  return result
-}
+
 
 class Transfer extends Component {
-  state = {
-    totalTransfer: 0
-  }
 
-  pushTransferPolicy = async () => {
-    if (this.state.totalTransfer !== 5) {
-      return
-    }
-    const query = `
-      mutation($policyRecommendation: policyRecommendationInputType) {
-        policyRecommendationCreate(policyRecommendation: $policyRecommendation) {
-          id
-          name
-          rules
-          type
-          status
-        }
-      }
-    `
-
-    const variables = {
-      policyRecommendation: {
-        name: `INGRESS-${getRandomString(5)}-policy`,
-        rules: `package ${getRandomString(
-          5
-        )}\n\ndefault allow = false \n\n\nallow {\n    contains(input.body.message, "<script>")\n}`,
-        type: 'AUTHZ',
-        status: 'NEW'
-      }
-    }
-    const response = await axios.post(
-      'https://kushal.parikh.sb.intern.monoxor.com:8080/graphql/proximity/protected',
-      {
-        query: query,
-        variables: variables
-      },
-      {
-        headers: {
-          org_id: '5f87efeeb92578007fcbc36d',
-          app_id: 'node-red',
-          app_secret: 'automatestuff'
-        }
-      }
-    )
-  }
 
   render() {
     return (
@@ -122,10 +70,6 @@ class Transfer extends Component {
               }}
               onClick={async () => {
                 await TransferStore.onClickTransfer()
-                this.setState((prevState) => ({
-                  totalTransfer: prevState.totalTransfer + 1
-                }))
-                this.pushTransferPolicy()
               }}
             >
               Transfer
