@@ -87,6 +87,7 @@ class UserStore {
 
   async fetchUserCompany() {
     const userAccessToken = LoginStore.getUserAccessToken()
+    const isProximityEnabled = ProximityStore.getIsProximityEnabled()
     const user = this.getUser()
     if (!user) {
       return
@@ -95,9 +96,13 @@ class UserStore {
     if (!user) {
       return
     }
+    let url = `http://kushal.parikh.sb.intern.monoxor.com:5000/company/${companyId}`
+    if (isProximityEnabled == 'true') {
+      url = `http://kushal.parikh.sb.intern.monoxor.com:5004/ewallet/company/${companyId}`
+    }
     try {
       const res = await axios.get(
-        `http://kushal.parikh.sb.intern.monoxor.com:5000/company/${companyId}`,
+        url,
         {},
         {
           headers: {

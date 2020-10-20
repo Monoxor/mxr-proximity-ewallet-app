@@ -12,6 +12,7 @@ class TransferStore {
     let toUsername = null
     let toUser = null
     let amount = null
+    let message= null
   }
 
 
@@ -69,9 +70,20 @@ class TransferStore {
     return this.amount
   }
 
+  
+  setMessage(message) {
+    this.message = message
+    return this.message
+  }
+
+
+  getMessage() {
+    return this.message
+  }
 
   async onClickTransfer() {
     const amount = this.getAmount()
+    const message = this.getMessage()
     const fromUsername = this.getFromUsername()
     UserStore.setUsername(fromUsername)
     const fromUser = await UserStore.fetchUser()
@@ -94,7 +106,8 @@ class TransferStore {
         data: {
           fromUser: fromUser,
           toUser: toUser,
-          amount: amount
+          amount: amount,
+          message: message
         },
         headers: {
           'content-type': 'application/json',
@@ -113,7 +126,8 @@ decorate(TransferStore, {
   fromUser: observable,
   toUsername: observable,
   toUser: observable,
-  amount: observable
+  amount: observable,
+  message: observable
 })
 
 export default new TransferStore()

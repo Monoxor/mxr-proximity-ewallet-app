@@ -71,6 +71,9 @@ class AppBar extends Component {
           <Box style = {{padding: 10}}>
           <a href={`/user/${user.username}/transfer`}>Transfer</a>
           </Box>
+          <Box style = {{padding: 10}}>
+          <a href={`/simulation`}>Simulation</a>
+          </Box>
         </Box>
       </Box>
       
