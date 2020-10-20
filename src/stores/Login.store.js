@@ -9,12 +9,10 @@ class LoginStore {
   }
 
   fetchUserAccessToken() {
-    console.log("fetchUserAccessToken");
     const username = this.getUsername();
     let accessToken;
     switch (username) {
       case "mark":
-        console.log("mark");
         accessToken =
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im5hbWUiOiJNYXJrIiwidXNlcm5hbWUiOiJtYXJrIiwicm9sZSI6IlBSSU1BUlkiLCJjb21wYW55SWQiOjUwMSwiZ3JvdXBJZCI6MTAxLCJ3YWxsZXRJZCI6IjYwMSJ9fQ.Td1ntbFAPHiZu68TsQrqE-J3opT576MYITsvb67aYo4";
         break;
@@ -22,11 +20,18 @@ class LoginStore {
         accessToken =
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im5hbWUiOiJNYXJ5IiwidXNlcm5hbWUiOiJtYXJ5Iiwicm9sZSI6IlNFQ09OREFSWSIsImNvbXBhbnlJZCI6NTAxLCJncm91cElkIjoxMDEsIndhbGxldElkIjoiNjAzIn19.mrHXHOcyymo3TOq7QZWIQIQKjHpY9C2y7pQ2wAwqbMY";
         break;
+      case "lisa":
+        accessToken =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im5hbWUiOiJMaXNhIiwidXNlcm5hbWUiOiJsaXNhIiwicm9sZSI6IlBSSU1BUlkiLCJjb21wYW55SWQiOjUwMiwiZ3JvdXBJZCI6MTAzLCJ3YWxsZXRJZCI6IjYwOCJ9fQ.HheErznKHxDkmsj2h4o7vEfZ_lKXrXQJ-GFczA3Jhvo";
+        break;
+      case "danny":
+        accessToken =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im5hbWUiOiJEYW5ueSIsInVzZXJuYW1lIjoiZGFubnkiLCJyb2xlIjoiU0VDT05EQVJZIiwiY29tcGFueUlkIjo1MDIsImdyb3VwSWQiOjEwMywid2FsbGV0SWQiOiI2MTEifX0.MPa8WbAQTKYJVkmxrZECoCDF3jFnz1tR_vDRC3Urah8";
+        break;
       default:
         break;
     }
     this.setUserAccessToken(accessToken);
-    console.log(accessToken);
     return accessToken;
   }
 
