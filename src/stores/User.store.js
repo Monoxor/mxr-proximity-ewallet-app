@@ -101,19 +101,26 @@ class UserStore {
       url = `http://kushal.parikh.sb.intern.monoxor.com:5004/ewallet/company/${companyId}`
     }
     try {
-      const res = await axios.get(
-        url,
-        {},
-        {
-          headers: {
-            access_token: userAccessToken
-          }
+      const res = await axios({
+        url: url,
+        method: 'get',
+        data: {},
+        headers: {
+          'content-type': 'application/json',
+          access_token: userAccessToken
         }
-      )
+      }) 
+      if (res.status == 401) {
+        ProximityStore.setIsUnauthorized(true)
+        return
+      }
       const company = res.data
       return this.setUserCompany(company)
     } catch (err) {
       console.log(err)
+      if (err.message.includes(401)) {
+        ProximityStore.setIsUnauthorized(true)
+      }
     }
   }
 
