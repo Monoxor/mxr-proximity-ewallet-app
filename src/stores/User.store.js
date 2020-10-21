@@ -21,9 +21,9 @@ class UserStore {
     }
     const isProximityEnabled = ProximityStore.getIsProximityEnabled()
     const userAccessToken = LoginStore.getUserAccessToken()
-    let url = `http://kushal.parikh.sb.intern.monoxor.com:5000/user/${username}`
+    let url = `http://pankaj.moolrajani.sb.intern.monoxor.com:5000/user/${username}`
     if (isProximityEnabled == 'true') {
-      url = `http://kushal.parikh.sb.intern.monoxor.com:5002/ewallet/user/${username}`
+      url = `http://pankaj.moolrajani.sb.intern.monoxor.com:5002/ewallet/user/${username}`
     }
     try {
       const res = await axios({
@@ -52,10 +52,10 @@ class UserStore {
   async fetchUsers() {
     const isProximityEnabled = ProximityStore.getIsProximityEnabled()
     const userAccessToken = LoginStore.getUserAccessToken()
-    let url = 'http://kushal.parikh.sb.intern.monoxor.com:5000/users/search'
+    let url = 'http://pankaj.moolrajani.sb.intern.monoxor.com:5000/users/search'
     if (isProximityEnabled == 'true') {
       url =
-        'http://kushal.parikh.sb.intern.monoxor.com:5001/ewallet/users/search'
+        'http://pankaj.moolrajani.sb.intern.monoxor.com:5001/ewallet/users/search'
     }
     try {
       const res = await axios({
@@ -96,9 +96,9 @@ class UserStore {
     if (!user) {
       return
     }
-    let url = `http://kushal.parikh.sb.intern.monoxor.com:5000/company/${companyId}`
+    let url = `http://pankaj.moolrajani.sb.intern.monoxor.com:5000/company/${companyId}`
     if (isProximityEnabled == 'true') {
-      url = `http://kushal.parikh.sb.intern.monoxor.com:5004/ewallet/company/${companyId}`
+      url = `http://pankaj.moolrajani.sb.intern.monoxor.com:5004/ewallet/company/${companyId}`
     }
     try {
       const res = await axios.get(
@@ -125,9 +125,9 @@ class UserStore {
     if (!user) {
       return
     }
-    let url = `http://kushal.parikh.sb.intern.monoxor.com:5000/wallet/${user.walletId}`
+    let url = `http://pankaj.moolrajani.sb.intern.monoxor.com:5000/wallet/${user.walletId}`
     if (isProximityEnabled == 'true') {
-      url = `http://kushal.parikh.sb.intern.monoxor.com:5003/ewallet/wallet/${user.walletId}`
+      url = `http://pankaj.moolrajani.sb.intern.monoxor.com:5003/ewallet/wallet/${user.walletId}`
     }
     try {
       const res = await axios({
@@ -161,7 +161,7 @@ class UserStore {
     const walletId = user.walletId
     try {
       const res = await axios.get(
-        `http://kushal.parikh.sb.intern.monoxor.com:5000/wallet/${walletId}`
+        `http://pankaj.moolrajani.sb.intern.monoxor.com:5000/wallet/${walletId}`
       )
       const wallet = res.data
       return this.setUserWallet(wallet)

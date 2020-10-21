@@ -51,14 +51,14 @@ class Simulate extends Component {
       }
     }
     const response = await axios.post(
-      'https://kushal.parikh.sb.intern.monoxor.com:8080/graphql/proximity/protected',
+      'https://graphql-prod.monoxor.com/graphql/proximity/protected',
       {
         query: query,
         variables: variables
       },
       {
         headers: {
-          org_id: '5f87efeeb92578007fcbc36d',
+          org_id: '5f32573f9ec86e0a3577882e',
           app_id: 'node-red',
           app_secret: 'automatestuff'
         }
