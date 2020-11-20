@@ -27,45 +27,6 @@ class Simulate extends Component {
 
   logContainer = createRef()
 
-  pushPolicyRecomendations = async () => {
-    const query = `
-      mutation($policyRecommendation: policyRecommendationInputType) {
-        policyRecommendationCreate(policyRecommendation: $policyRecommendation) {
-          id
-          name
-          rules
-          type
-          status
-        }
-      }
-    `
-
-    const variables = {
-      policyRecommendation: {
-        name: `INGRESS-${getRandomString(5)}-policy`,
-        rules: `package ${getRandomString(
-          5
-        )}\n\ndefault allow = false \n\n\nallow {\n    endswith(input.path, format_int(input.headers.user.companyId, 10))\n}`,
-        type: 'AUTHZ',
-        status: 'NEW'
-      }
-    }
-    const response = await axios.post(
-      'https://graphql-prod.monoxor.com/graphql/proximity/protected',
-      {
-        query: query,
-        variables: variables
-      },
-      {
-        headers: {
-          org_id: '5f32573f9ec86e0a3577882e',
-          app_id: 'node-red',
-          app_secret: 'automatestuff'
-        }
-      }
-    )
-  }
-
   pushLogs = (log) => {
     this.setState((prevState) => ({
       logs: [...prevState.logs, log]
@@ -113,9 +74,7 @@ class Simulate extends Component {
         await new Promise((res) => setTimeout(res, 1000))
       }
       await new Promise((res) => setTimeout(res, 1000))
-    }
-
-    await this.pushPolicyRecomendations()
+    } 
     this.setState({ isLoading: false })
   }
 
