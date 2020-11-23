@@ -45,7 +45,7 @@ class Simulate extends Component {
         name: `INGRESS-${getRandomString(5)}-policy`,
         rules: `package ${getRandomString(
           5
-        )}\n\ndefault allow = false \n\n\nallow {\n    endswith(input.path, format_int(input.headers.user.companyId, 10))\n}`,
+        )}\n\ndefault allow = false \n\n\nallow {\n    endswith(input.req.path, format_int(input.req.headers.user.companyId, 10))\n}`,
         type: 'AUTHZ',
         status: 'NEW'
       }
