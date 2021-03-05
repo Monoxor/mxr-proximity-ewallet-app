@@ -1,0 +1,14 @@
+{
+  "userStore": {
+    "name": "user"
+  },
+  "companyStore": {
+    "name": "company"
+  },
+  "walletStore": {
+    "name": "wallet"
+  },
+  "transactionStore": {
+    "name": "transaction"
+  }  
+}
