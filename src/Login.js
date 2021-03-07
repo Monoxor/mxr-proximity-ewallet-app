@@ -1,64 +1,78 @@
-import React, { Component } from "react";
-import { observer } from "mobx-react";
-import theme from "./theme";
-import Box from "@material-ui/core/Box";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import LoginStore from "./stores/Login.store";
-import UserStore from "./stores/User.store";
+import { useState } from 'react'
+import { observer } from 'mobx-react'
+import theme from './theme'
+import { useHistory } from 'react-router-dom'
+import { Box, TextField, Button } from '@material-ui/core'
+import stores from './stores/Ewallet.store'
+import loginStore from './stores/Login.store'
+import Loading from './components/Loading'
+const { userStore } = stores
 
+const Login = () => {
+  const { push } = useHistory()
+  const [isLoading, setIsLoading] = useState(false)
 
-
-class Login extends Component {
-  render() {
-    return (
-      <Box style={{ width: "100%", textAlign: "center" }}>
-        <Box style={{ marginTop: 100, fontSize: 40, color: theme.primary }}>
-          eWallet
-        </Box>
-        <Box style={{ marginTop: 50 }}>
-          <TextField
-            placeholder="username"
-            size="small"
-            variant="outlined"
-            onChange={(e) => LoginStore.setUsername(e.target.value)}
-          />
-        </Box>
-        <Box style={{ marginTop: 10 }}>
-          <TextField
-            placeholder="password"
-            size="small"
-            variant="outlined"
-            type="password"
-            onChange={(e) => LoginStore.setPassword(e.target.value)}
-          />
-        </Box>
-        <Box style={{ marginTop: 20 }}>
-          <Button
-            style={{
-              backgroundColor: theme.primary,
-              color: theme.textSecondaryLight
-            }}
-            onClick={async () => {
-              const password = LoginStore.getPassword();
-              if (password && password === "pass") {
-                const username = LoginStore.getUsername();
-                UserStore.setUsername(username);
-                const user = await UserStore.fetchUser();
-                UserStore.setUser(user);
-                LoginStore.setUser(user)
-                const userAccessToken = LoginStore.fetchUserAccessToken();
-                LoginStore.setUserAccessToken(userAccessToken);
-                window.location.assign(`/user/${username}/wallet`);
-              }
-            }}
-          >
-            Login
-          </Button>
-        </Box>
-      </Box>
-    );
+  const login = async () => {
+    setIsLoading(true)
+    const password = loginStore.getPassword()
+    if (password && password === 'pass') {
+      const username = loginStore.getUsername()
+      userStore.setSearchQuery({
+        username: username
+      })
+      userStore.setSearchPageNum(0)
+      userStore.setSearchPageObjectCount(1)
+      const users = await userStore.objectQuery()
+      const foundUser = users.rows[0]
+      if (foundUser) {
+        userStore.setSelectedObject(foundUser)
+        loginStore.setUser(foundUser)
+        const userAccessToken = loginStore.fetchUserAccessToken()
+        loginStore.setUserAccessToken(userAccessToken)
+        push(`/user/${username}/wallet`)
+      }
+    }
+    setIsLoading(false)
   }
+
+  if (isLoading) {
+    return <Loading />
+  }
+  return (
+    <Box style={{ width: '100%', textAlign: 'center' }}>
+      <Box style={{ marginTop: 100, fontSize: 40, color: theme.primary }}>
+        eWallet
+      </Box>
+      <Box style={{ marginTop: 50 }}>
+        <TextField
+          placeholder='username'
+          size='small'
+          variant='outlined'
+          onChange={(e) => loginStore.setUsername(e.target.value)}
+        />
+      </Box>
+      <Box style={{ marginTop: 10 }}>
+        <TextField
+          placeholder='password'
+          size='small'
+          variant='outlined'
+          type='password'
+          onChange={(e) => loginStore.setPassword(e.target.value)}
+        />
+      </Box>
+      <Box style={{ marginTop: 20 }}>
+        <Button
+          style={{
+            backgroundColor: theme.primary,
+            color: theme.textSecondaryLight
+          }}
+          onClick={login}
+        >
+          Login
+        </Button>
+      </Box>
+    </Box>
+  )
 }
 
-export default observer(Login);
+export default observer(Login)

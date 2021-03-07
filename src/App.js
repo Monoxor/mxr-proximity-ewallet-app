@@ -1,32 +1,31 @@
 import React, { Component } from 'react'
-import { Route, Switch, BrowserRouter as Router } from 'react-router-dom'
+import {
+  Route,
+  Switch,
+  BrowserRouter as Router,
+  Redirect
+} from 'react-router-dom'
 import { observer } from 'mobx-react'
-import theme from './theme'
-import Box from '@material-ui/core/Box'
-import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
-import UserWallet from './UserWallet'
+import { Box } from '@material-ui/core'
 import Login from './Login'
-import Company from './Company'
+import UserWallet from './UserWallet'
 import Transfer from './Transfer'
-import Simulate from './Simulate'
-
+// import Simulate from './Simulate'
 
 class App extends Component {
   _renderRoutes() {
     return (
       <Router>
         <Switch>
-          <Route path='/company/:companyId' component={Company} />
-          <Route path='/user/:username/wallet' component={UserWallet} />
+          {/* <Route path='/simulation' component={Simulate} />  */}
           <Route path='/user/:username/transfer' component={Transfer} />
-          <Route path='/simulation' component={Simulate} />
+          <Route path='/user/:username/wallet' component={UserWallet} />
           <Route path='/login' component={Login} />
+          <Redirect path='/' to='/login' />
         </Switch>
       </Router>
     )
   }
-
 
   render() {
     return (
@@ -36,6 +35,5 @@ class App extends Component {
     )
   }
 }
-
 
 export default observer(App)

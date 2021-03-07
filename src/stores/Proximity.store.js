@@ -1,17 +1,16 @@
-import { decorate, observable } from "mobx";
-import axios from "axios";
-import LoginStore from "./Login.store";
+import { makeAutoObservable, observable } from 'mobx'
 
 class ProximityStore {
+  isProximityEnabled = null
+  isUnauthorized = null
   constructor() {
-    let isProximityEnabled = null;
-    let isUnauthorized = null
+    makeAutoObservable(this)
   }
 
   setIsProximityEnabled(value) {
-    this.isProximityEnabled = value;
+    this.isProximityEnabled = value
     localStorage.setItem('isProximityEnabled', value)
-    return this.isProximityEnabled;
+    return this.isProximityEnabled
   }
 
   getIsProximityEnabled() {
@@ -19,7 +18,7 @@ class ProximityStore {
     if (!isProximityEnabled) {
       isProximityEnabled = localStorage.getItem('isProximityEnabled')
     }
-    return isProximityEnabled;
+    return isProximityEnabled
   }
 
   setIsUnauthorized(value) {
@@ -30,13 +29,6 @@ class ProximityStore {
   getIsUnauthorized() {
     return this.isUnauthorized
   }
-
-
 }
 
-decorate(ProximityStore, {
-  isProximityEnabled: observable,
-  isUnauthorized: observable
-});
-
-export default new ProximityStore();
+export default new ProximityStore()

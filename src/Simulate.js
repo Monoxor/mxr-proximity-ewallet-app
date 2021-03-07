@@ -111,7 +111,7 @@ class Simulate extends Component {
         }
         ProximityStore.setIsUnauthorized(false)
       }
-    } 
+    }
     await this.pushPolicyRecomendations()
     this.setState({ isLoading: false })
   }

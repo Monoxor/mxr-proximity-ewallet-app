@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx'
-import { axiosRestInstance } from '../libs/axios/axios.lib' 
+import { axiosRestInstance } from '../libs/axios/axios.lib'
 import objects from './objects.json'
 
 class EwalletStore {
@@ -38,9 +38,12 @@ class EwalletStore {
 
   async objectUpdate() {
     const data = this.getFormFields()
-    const response = await axiosRestInstance.put(`/${this.objectName}/${data.id}`, {
-      data: data
-    })
+    const response = await axiosRestInstance.put(
+      `/${this.objectName}/${data.id}`,
+      {
+        data: data
+      }
+    )
     if (response.status === 200) {
       return response.data
     }
@@ -347,8 +350,7 @@ class EwalletStore {
 
 const stores = {}
 for (const key in objects) {
-  stores[key] = new ProximityStore(
-    objects[key].name
-  )
+  stores[key] = new EwalletStore(objects[key].name)
 }
+
 export default stores

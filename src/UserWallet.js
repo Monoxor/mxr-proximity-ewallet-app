@@ -1,52 +1,83 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
 import { observer } from 'mobx-react'
-import { toJS } from 'mobx'
 import theme from './theme'
-import Box from '@material-ui/core/Box'
+import { useParams } from 'react-router-dom'
+import { Box } from '@material-ui/core'
 import AppBar from './components/AppBar'
-import UserStore from './stores/User.store'
-import ProximityStore from './stores/Proximity.store'
+import Loading from './components/Loading'
+import stores from './stores/Ewallet.store'
+import proximityStore from './stores/Proximity.store'
 
+const { userStore, transactionStore } = stores
 
-class UserWallet extends Component {
-  async componentDidMount() {
-    const username = this.props.match.params.username
-    UserStore.setUsername(username)
-    await UserStore.fetchUser()
-    await UserStore.fetchUserCompany()
-    await UserStore.fetchUserWallet()
+const UserWallet = () => {
+  const [isLoading, setIsLoading] = useState(false)
+  const { username } = useParams()
+
+  const fetchUserAndTransactions = async () => {
+    setIsLoading(true)
+
+    //Fetch user, wallet and company
+    userStore.setSearchQuery({
+      username: username
+    })
+    userStore.setSearchPageNum(0)
+    userStore.setSearchPageObjectCount(1)
+    const userResponse = await userStore.objectQuery([
+      {
+        model: 'Company'
+      },
+      {
+        model: 'Wallet'
+      }
+    ])
+    const foundUser = userResponse.rows[0]
+    if (foundUser) {
+      userStore.setSelectedObject(foundUser)
+    }
+
+    //Fetch Transaction
+    transactionStore.setSearchQuery({
+      WalletId: foundUser.Wallet.id
+    })
+    transactionStore.setSearchPageObjectCount(25)
+    const transactionResponse = await transactionStore.objectQuery()
+    const foundTransactions = transactionResponse.rows
+    if (foundTransactions) {
+      transactionStore.setObjects(foundTransactions)
+    }
+    setIsLoading(false)
   }
 
+  useEffect(() => {
+    fetchUserAndTransactions()
 
-  _renderTransactions() {
-    const wallet = UserStore.getUserWallet()
-    if (!wallet || !wallet.transactions || wallet.transactions.length < 1) {
-      return <Box style={{ color: 'red' }}>Unauthorized !</Box>
+    return () => {
+      userStore.resetAllFields()
+      transactionStore.resetAllFields()
     }
+  }, [])
+
+  const _renderTransactions = () => {
+    const transactions = transactionStore.getObjects()
     let transactionsList = []
-    let transactions = wallet.transactions
-    let isProximityEnabled = ProximityStore.getIsProximityEnabled()
-    if (!transactions || transactions.length === 0) {
-      return null
-    }
 
-    transactions.map((transaction) => {
-      transactionsList.push(
-        <Box key={Math.random()}>
-          {transaction.productName} - {transaction.price}
-        </Box>
-      )
-    })
+    transactions &&
+      transactions.map((transaction) => {
+        transactionsList.push(
+          <Box key={Math.random()}>
+            {transaction.type} - ${transaction.amount}
+          </Box>
+        )
+      })
     return transactionsList
   }
 
-
-  _renderWalletPage() {
-    const username = UserStore.getUsername()
-    const user = UserStore.getUser()
-    const company = UserStore.getUserCompany()
-    const wallet = UserStore.getUserWallet()
-    const isUnauthorized = ProximityStore.getIsUnauthorized()
+  const _renderWalletPage = () => {
+    const user = userStore.getSelectedObject()
+    const company = user.Company
+    const wallet = user.Wallet
+    const isUnauthorized = proximityStore.getIsUnauthorized()
     if (isUnauthorized) {
       return (
         <Box style={{ marginTop: 30, marginLeft: 30 }}>
@@ -57,7 +88,6 @@ class UserWallet extends Component {
     if (!user || !company || !wallet) {
       return null
     }
-    const transactions = this._renderTransactions()
     return (
       <Box style={{ paddingLeft: 20 }}>
         <Box style={{ marginTop: 100, fontSize: 40, color: theme.primary }}>
@@ -73,20 +103,22 @@ class UserWallet extends Component {
           <Box>
             <b>Transactions: </b>
           </Box>
-          <Box style={{ marginTop: 10 }}>{transactions}</Box>
+          <Box style={{ marginTop: 10 }}>{_renderTransactions()}</Box>
         </Box>
       </Box>
     )
   }
-  render() {
-    return (
-      <Box style={{ width: '100%', textAlign: 'left' }}>
-        <AppBar />
-        {this._renderWalletPage()}
-      </Box>
-    )
-  }
-}
 
+  if (isLoading) {
+    return <Loading />
+  }
+  const user = userStore.getSelectedObject()
+  return (
+    <Box style={{ width: '100%', textAlign: 'left' }}>
+      <AppBar />
+      {user ? _renderWalletPage() : ''}
+    </Box>
+  )
+}
 
 export default observer(UserWallet)

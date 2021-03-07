@@ -1,39 +1,37 @@
-import React, { Component } from "react";
-import { observer } from "mobx-react";
-import theme from "./../theme";
-import Box from "@material-ui/core/Box";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import LoginStore from "./../stores/Login.store";
-import ProximityStore from "../stores/Proximity.store";
+import React, { Component } from 'react'
+import { observer } from 'mobx-react'
+import theme from './../theme'
+import { Box } from '@material-ui/core'
+import { Link } from 'react-router-dom'
+import LoginStore from './../stores/Login.store'
+import ProximityStore from '../stores/Proximity.store'
 
 class AppBar extends Component {
   render() {
     const isProximityEnabled = ProximityStore.getIsProximityEnabled()
-    const user = LoginStore.getUser();
+    const user = LoginStore.getUser()
     if (!user) {
       return null
     }
     return (
       <Box
         style={{
-          display: "flex",
-          flexDirection: "column",
-          width: "100%",
-          textAlign: "left",
-          display: "flex",
-          alignItems: "center",
-         
+          display: 'flex',
+          flexDirection: 'column',
+          width: '100%',
+          textAlign: 'left',
+          display: 'flex',
+          alignItems: 'center'
         }}
       >
         <Box
           style={{
-            width: "100%",
+            width: '100%',
             height: 200,
-            textAlign: "left",
-            display: "flex",
+            textAlign: 'left',
+            display: 'flex',
             height: 50,
-            alignItems: "center",
+            alignItems: 'center',
             color: theme.textSecondaryLight,
             backgroundColor: theme.primaryLight
           }}
@@ -47,38 +45,40 @@ class AppBar extends Component {
           >
             eWallet
           </Box>
-          <Box style={{ flex: 5, textAlign: "right", marginRight: 30}}>
-            <input 
-              style = {{marginBottom: 5}} type='checkbox' id='isProximityEnabled' checked={isProximityEnabled == "true" ? true : false} 
-              onChange = {()=>{
-                if (isProximityEnabled == "true") {
-                  ProximityStore.setIsProximityEnabled("false")
+          <Box style={{ flex: 5, textAlign: 'right', marginRight: 30 }}>
+            <input
+              style={{ marginBottom: 5 }}
+              type='checkbox'
+              id='isProximityEnabled'
+              checked={isProximityEnabled == 'true' ? true : false}
+              onChange={() => {
+                if (isProximityEnabled == 'true') {
+                  ProximityStore.setIsProximityEnabled('false')
                 } else {
-                  ProximityStore.setIsProximityEnabled("true")
+                  ProximityStore.setIsProximityEnabled('true')
                 }
               }}
             />
             Proximity Enabled
           </Box>
-          <Box style={{ flex: 1, textAlign: "right", marginRight: 10 }}>
+          <Box style={{ flex: 1, textAlign: 'right', marginRight: 10 }}>
             Hi {user ? user.name : null} !
           </Box>
         </Box>
-        <Box style = {{display: "flex"}}>
-          <Box style = {{padding: 10}}>
-            <a href={`/user/${user.username}/wallet`}>Wallet</a>
+        <Box style={{ display: 'flex' }}>
+          <Box style={{ padding: 10 }}>
+            <Link to={`/user/${user.username}/wallet`}>Wallet</Link>
           </Box>
-          <Box style = {{padding: 10}}>
-          <a href={`/user/${user.username}/transfer`}>Transfer</a>
+          <Box style={{ padding: 10 }}>
+            <Link to={`/user/${user.username}/transfer`}>Transfer</Link>
           </Box>
-          <Box style = {{padding: 10}}>
-          <a href={`/simulation`}>Simulation</a>
+          <Box style={{ padding: 10 }}>
+            <Link to={`/simulation`}>Simulation</Link>
           </Box>
         </Box>
       </Box>
-      
-    );
+    )
   }
 }
 
-export default observer(AppBar);
+export default observer(AppBar)
