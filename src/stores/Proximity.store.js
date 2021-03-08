@@ -13,9 +13,10 @@ class ProximityStore {
     return this.isProximityEnabled
   }
 
-  getIsProximityEnabled() { 
-    if (localStorage.getItem('isProximityEnabled') ) {
-      const isEnabled = localStorage.getItem('isProximityEnabled') === 'true' ? true : false
+  getIsProximityEnabled() {
+    if (localStorage.getItem('isProximityEnabled')) {
+      const isEnabled =
+        localStorage.getItem('isProximityEnabled') === 'true' ? true : false
       this.setIsProximityEnabled(isEnabled)
     }
     return this.isProximityEnabled

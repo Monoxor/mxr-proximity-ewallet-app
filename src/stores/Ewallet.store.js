@@ -1,5 +1,8 @@
 import { makeAutoObservable } from 'mobx'
-import { axiosRestInstance, proximityAxiosInstance } from '../libs/axios/axios.lib'
+import {
+  axiosRestInstance,
+  proximityAxiosInstance
+} from '../libs/axios/axios.lib'
 import objects from './objects.json'
 import ProximityStore from './Proximity.store'
 
@@ -52,10 +55,14 @@ class EwalletStore {
     }
   }
 
-  async objectQueryById(id, include=[]) {
+  async objectQueryById(id, include = []) {
     const isProximityEnabled = ProximityStore.getIsProximityEnabled()
-    const axiosInstance = isProximityEnabled ? proximityAxiosInstance : axiosRestInstance
-    const response = await axiosInstance.get(`${isProximityEnabled ? this.proximityUrl : ''}/${this.objectName}/${id}`)
+    const axiosInstance = isProximityEnabled
+      ? proximityAxiosInstance
+      : axiosRestInstance
+    const response = await axiosInstance.get(
+      `${isProximityEnabled ? this.proximityUrl : ''}/${this.objectName}/${id}`
+    )
     if (response.status === 200) {
       return response.data
     }
@@ -80,23 +87,27 @@ class EwalletStore {
     let sortQuery = this.getSortQuery()
     if (!sortQuery) {
       sortQuery = []
-    }  
+    }
     const isProximityEnabled = ProximityStore.getIsProximityEnabled()
-    const axiosInstance = isProximityEnabled ? proximityAxiosInstance : axiosRestInstance
+    const axiosInstance = isProximityEnabled
+      ? proximityAxiosInstance
+      : axiosRestInstance
     console.log(isProximityEnabled)
-      const response = await axiosInstance.post(
-        `${isProximityEnabled ? this.proximityUrl : ''}/${this.objectName}/search`,
-        {
-          query: {
-            where: searchQuery,
-            limit: pageObjectCount,
-            offset: pageNum * pageObjectCount,
-            include: include,
-            order: sortQuery
-          }
+    const response = await axiosInstance.post(
+      `${isProximityEnabled ? this.proximityUrl : ''}/${
+        this.objectName
+      }/search`,
+      {
+        query: {
+          where: searchQuery,
+          limit: pageObjectCount,
+          offset: pageNum * pageObjectCount,
+          include: include,
+          order: sortQuery
         }
-      ) 
-    
+      }
+    )
+
     if (response.status === 200) {
       return response.data
     }

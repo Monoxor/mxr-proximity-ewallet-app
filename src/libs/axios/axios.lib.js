@@ -2,13 +2,12 @@ import axios from 'axios'
 import loginStore from '../../stores/Login.store'
 import proximityStore from '../../stores/Proximity.store'
 
- 
 const axiosRestInstance = axios.create({
-  baseURL: 'https://kushal.parikh.sb.intern.monoxor.com:8080/data-services/crud/rsga/ewallet'
-}) 
- 
+  baseURL:
+    'https://kushal.parikh.sb.intern.monoxor.com:8080/data-services/crud/rsga/ewallet'
+})
 
-const proximityAxiosInstance = axios.create() 
+const proximityAxiosInstance = axios.create()
 // Add a response interceptor
 
 proximityAxiosInstance.interceptors.request.use(
