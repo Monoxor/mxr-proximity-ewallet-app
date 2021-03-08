@@ -49,7 +49,7 @@ class EwalletStore {
     }
   }
 
-  async objectQueryById(id, include) {
+  async objectQueryById(id, include=[]) {
     const response = await axiosRestInstance.get(`/${this.objectName}/${id}`, {
       params: {
         include: JSON.stringify(include)

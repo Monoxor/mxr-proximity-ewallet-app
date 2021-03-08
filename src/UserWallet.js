@@ -8,37 +8,46 @@ import Loading from './components/Loading'
 import stores from './stores/Ewallet.store'
 import proximityStore from './stores/Proximity.store'
 
-const { userStore, transactionStore } = stores
+const { userStore, companyStore, walletStore, transactionStore } = stores
 
 const UserWallet = () => {
   const [isLoading, setIsLoading] = useState(false)
   const { username } = useParams()
 
-  const fetchUserAndTransactions = async () => {
+  const fetchData = async () => {
     setIsLoading(true)
 
-    //Fetch user, wallet and company
+    //Fetch user
     userStore.setSearchQuery({
       username: username
     })
     userStore.setSearchPageNum(0)
     userStore.setSearchPageObjectCount(1)
-    const userResponse = await userStore.objectQuery([
-      {
-        model: 'Company'
-      },
-      {
-        model: 'Wallet'
-      }
-    ])
+    const userResponse = await userStore.objectQuery()
     const foundUser = userResponse.rows[0]
     if (foundUser) {
       userStore.setSelectedObject(foundUser)
     }
 
+    // Fetch wallet
+    walletStore.setSearchQuery({
+      UserId: foundUser.id
+    })
+    walletStore.setSearchPageNum(0)
+    walletStore.setSearchPageObjectCount(1)
+    const walletResponse = await walletStore.objectQuery()
+    const foundWallet = walletResponse.rows[0]
+    if(foundWallet) {
+      walletStore.setSelectedObject(foundWallet)
+    }
+    // Fetch company
+    const company = await companyStore.objectQueryById(foundUser.CompanyId)
+    if(company) {
+      companyStore.setSelectedObject(company)
+    }
     //Fetch Transaction
     transactionStore.setSearchQuery({
-      WalletId: foundUser.Wallet.id
+      WalletId: foundWallet.id
     })
     transactionStore.setSearchPageObjectCount(25)
     const transactionResponse = await transactionStore.objectQuery()
@@ -50,11 +59,13 @@ const UserWallet = () => {
   }
 
   useEffect(() => {
-    fetchUserAndTransactions()
+    fetchData()
 
     return () => {
       userStore.resetAllFields()
       transactionStore.resetAllFields()
+      walletStore.resetAllFields()
+      companyStore.resetAllFields()
     }
   }, [])
 
@@ -75,8 +86,8 @@ const UserWallet = () => {
 
   const _renderWalletPage = () => {
     const user = userStore.getSelectedObject()
-    const company = user.Company
-    const wallet = user.Wallet
+    const company = companyStore.getSelectedObject()
+    const wallet = walletStore.getSelectedObject()
     const isUnauthorized = proximityStore.getIsUnauthorized()
     if (isUnauthorized) {
       return (
