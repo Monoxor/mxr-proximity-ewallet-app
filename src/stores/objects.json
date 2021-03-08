@@ -1,14 +1,18 @@
 {
   "userStore": {
-    "name": "user"
+    "name": "user",
+    "proximityUrl": "http://kushal.parikh.sb.intern.monoxor.com:5003/ewallet"
   },
   "companyStore": {
-    "name": "company"
+    "name": "company",
+    "proximityUrl": "http://kushal.parikh.sb.intern.monoxor.com:5002/ewallet"
   },
   "walletStore": {
-    "name": "wallet"
+    "name": "wallet",
+    "proximityUrl": "http://kushal.parikh.sb.intern.monoxor.com:5001/ewallet"
   },
   "transactionStore": {
-    "name": "transaction"
+    "name": "transaction",
+    "proximityUrl": "http://kushal.parikh.sb.intern.monoxor.com:5004/ewallet"
   }
 }

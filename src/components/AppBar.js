@@ -50,13 +50,9 @@ class AppBar extends Component {
               style={{ marginBottom: 5 }}
               type='checkbox'
               id='isProximityEnabled'
-              checked={isProximityEnabled == 'true' ? true : false}
-              onChange={() => {
-                if (isProximityEnabled == 'true') {
-                  ProximityStore.setIsProximityEnabled('false')
-                } else {
-                  ProximityStore.setIsProximityEnabled('true')
-                }
+              checked={isProximityEnabled}
+              onChange={(e) => {
+                ProximityStore.setIsProximityEnabled(e.target.checked)
               }}
             />
             Proximity Enabled

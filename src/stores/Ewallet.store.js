@@ -1,6 +1,7 @@
 import { makeAutoObservable } from 'mobx'
-import { axiosRestInstance } from '../libs/axios/axios.lib'
+import { axiosRestInstance, proximityAxiosInstance } from '../libs/axios/axios.lib'
 import objects from './objects.json'
+import ProximityStore from './Proximity.store'
 
 class EwalletStore {
   objectName = null
@@ -21,8 +22,10 @@ class EwalletStore {
   filteredObjects = null
   showAddObjectDialog = null
   cancelToken = null
-  constructor(objectName) {
+  proximityUrl = null
+  constructor(objectName, proximityUrl) {
     this.objectName = objectName
+    this.proximityUrl = proximityUrl
     makeAutoObservable(this)
   }
 
@@ -50,11 +53,9 @@ class EwalletStore {
   }
 
   async objectQueryById(id, include=[]) {
-    const response = await axiosRestInstance.get(`/${this.objectName}/${id}`, {
-      params: {
-        include: JSON.stringify(include)
-      }
-    })
+    const isProximityEnabled = ProximityStore.getIsProximityEnabled()
+    const axiosInstance = isProximityEnabled ? proximityAxiosInstance : axiosRestInstance
+    const response = await axiosInstance.get(`${isProximityEnabled ? this.proximityUrl : ''}/${this.objectName}/${id}`)
     if (response.status === 200) {
       return response.data
     }
@@ -79,23 +80,23 @@ class EwalletStore {
     let sortQuery = this.getSortQuery()
     if (!sortQuery) {
       sortQuery = []
-    }
-    const CancelToken = axiosRestInstance.CancelToken
-    const cancelToken = CancelToken.source()
-    this.setCancelToken(cancelToken)
-    const response = await axiosRestInstance.post(
-      `/${this.objectName}/search`,
-      {
-        query: {
-          where: searchQuery,
-          limit: pageObjectCount,
-          offset: pageNum * pageObjectCount,
-          include: include,
-          order: sortQuery
+    }  
+    const isProximityEnabled = ProximityStore.getIsProximityEnabled()
+    const axiosInstance = isProximityEnabled ? proximityAxiosInstance : axiosRestInstance
+    console.log(isProximityEnabled)
+      const response = await axiosInstance.post(
+        `${isProximityEnabled ? this.proximityUrl : ''}/${this.objectName}/search`,
+        {
+          query: {
+            where: searchQuery,
+            limit: pageObjectCount,
+            offset: pageNum * pageObjectCount,
+            include: include,
+            order: sortQuery
+          }
         }
-      },
-      { cancelToken: this.cancelToken.token }
-    )
+      ) 
+    
     if (response.status === 200) {
       return response.data
     }
@@ -350,7 +351,7 @@ class EwalletStore {
 
 const stores = {}
 for (const key in objects) {
-  stores[key] = new EwalletStore(objects[key].name)
+  stores[key] = new EwalletStore(objects[key].name, objects[key].proximityUrl)
 }
 
 export default stores

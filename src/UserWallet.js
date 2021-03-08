@@ -17,43 +17,47 @@ const UserWallet = () => {
   const fetchData = async () => {
     setIsLoading(true)
 
-    //Fetch user
-    userStore.setSearchQuery({
-      username: username
-    })
-    userStore.setSearchPageNum(0)
-    userStore.setSearchPageObjectCount(1)
-    const userResponse = await userStore.objectQuery()
-    const foundUser = userResponse.rows[0]
-    if (foundUser) {
-      userStore.setSelectedObject(foundUser)
-    }
+    try {
+      //Fetch user
+      userStore.setSearchQuery({
+        username: username
+      })
+      userStore.setSearchPageNum(0)
+      userStore.setSearchPageObjectCount(1)
+      const userResponse = await userStore.objectQuery()
+      const foundUser = userResponse.rows[0]
+      if (foundUser) {
+        userStore.setSelectedObject(foundUser)
+      }
 
-    // Fetch wallet
-    walletStore.setSearchQuery({
-      UserId: foundUser.id
-    })
-    walletStore.setSearchPageNum(0)
-    walletStore.setSearchPageObjectCount(1)
-    const walletResponse = await walletStore.objectQuery()
-    const foundWallet = walletResponse.rows[0]
-    if(foundWallet) {
-      walletStore.setSelectedObject(foundWallet)
-    }
-    // Fetch company
-    const company = await companyStore.objectQueryById(foundUser.CompanyId)
-    if(company) {
-      companyStore.setSelectedObject(company)
-    }
-    //Fetch Transaction
-    transactionStore.setSearchQuery({
-      WalletId: foundWallet.id
-    })
-    transactionStore.setSearchPageObjectCount(25)
-    const transactionResponse = await transactionStore.objectQuery()
-    const foundTransactions = transactionResponse.rows
-    if (foundTransactions) {
-      transactionStore.setObjects(foundTransactions)
+      // Fetch wallet
+      walletStore.setSearchQuery({
+        UserId: foundUser.id
+      })
+      walletStore.setSearchPageNum(0)
+      walletStore.setSearchPageObjectCount(1)
+      const walletResponse = await walletStore.objectQuery()
+      const foundWallet = walletResponse.rows[0]
+      if (foundWallet) {
+        walletStore.setSelectedObject(foundWallet)
+      }
+      // Fetch company
+      const company = await companyStore.objectQueryById(foundUser.CompanyId)
+      if (company) {
+        companyStore.setSelectedObject(company)
+      }
+      //Fetch Transaction
+      transactionStore.setSearchQuery({
+        WalletId: foundWallet.id
+      })
+      transactionStore.setSearchPageObjectCount(25)
+      const transactionResponse = await transactionStore.objectQuery()
+      const foundTransactions = transactionResponse.rows
+      if (foundTransactions) {
+        transactionStore.setObjects(foundTransactions)
+      }
+    } catch (error) {
+      setIsLoading(false)
     }
     setIsLoading(false)
   }
@@ -81,7 +85,13 @@ const UserWallet = () => {
           </Box>
         )
       })
-    return transactionsList
+    return transactionsList.length > 0 ? (
+      transactionsList
+    ) : (
+      <Box style={{ marginTop: 30, marginLeft: 30 }}>
+        <Box style={{ color: 'red', fontSize: 30 }}>Unauthorized !</Box>
+      </Box>
+    )
   }
 
   const _renderWalletPage = () => {

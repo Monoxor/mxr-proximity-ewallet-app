@@ -1,7 +1,7 @@
 import { makeAutoObservable, observable } from 'mobx'
 
 class ProximityStore {
-  isProximityEnabled = null
+  isProximityEnabled = false
   isUnauthorized = null
   constructor() {
     makeAutoObservable(this)
@@ -9,16 +9,16 @@ class ProximityStore {
 
   setIsProximityEnabled(value) {
     this.isProximityEnabled = value
-    localStorage.setItem('isProximityEnabled', value)
+    localStorage.setItem('isProximityEnabled', value ? 'true' : 'false')
     return this.isProximityEnabled
   }
 
-  getIsProximityEnabled() {
-    let isProximityEnabled = this.isProximityEnabled
-    if (!isProximityEnabled) {
-      isProximityEnabled = localStorage.getItem('isProximityEnabled')
+  getIsProximityEnabled() { 
+    if (localStorage.getItem('isProximityEnabled') ) {
+      const isEnabled = localStorage.getItem('isProximityEnabled') === 'true' ? true : false
+      this.setIsProximityEnabled(isEnabled)
     }
-    return isProximityEnabled
+    return this.isProximityEnabled
   }
 
   setIsUnauthorized(value) {
