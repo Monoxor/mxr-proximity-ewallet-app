@@ -15,7 +15,7 @@ import Transfer from './Transfer'
 class App extends Component {
   _renderRoutes() {
     return (
-      <Router>
+      <Router basename='ewallet'>
         <Switch>
           {/* <Route path='/simulation' component={Simulate} />  */}
           <Route path='/user/:username/transfer' component={Transfer} />

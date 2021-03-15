@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "keywords": [],
+  "homepage": "/ewallet",
   "main": "src/index.js",
   "dependencies": {
     "@brianmcallister/react-auto-scroll": "^1.1.0",
