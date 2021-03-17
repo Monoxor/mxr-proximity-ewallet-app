@@ -1,92 +1,87 @@
-import { decorate, observable } from "mobx";
+import { makeAutoObservable, observable } from 'mobx'
 
 class LoginStore {
+  username = null
+  password = null
+  userAccessToken = null
+  user = null
+
   constructor() {
-    let username = null;
-    let password = null;
-    let userAccessToken = null;
-    let user = null;
+    makeAutoObservable(this)
   }
 
   fetchUserAccessToken() {
-    const username = this.getUsername();
-    let accessToken;
+    const username = this.getUsername()
+    let accessToken
     switch (username) {
-      case "mark":
+      case 'mark':
         accessToken =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im5hbWUiOiJNYXJrIiwidXNlcm5hbWUiOiJtYXJrIiwicm9sZSI6IlBSSU1BUlkiLCJjb21wYW55SWQiOjUwMSwiZ3JvdXBJZCI6MTAxLCJ3YWxsZXRJZCI6IjYwMSJ9fQ.Td1ntbFAPHiZu68TsQrqE-J3opT576MYITsvb67aYo4";
-        break;
-      case "mary":
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiM2VhODFmMDktMDJlMS00MjEyLWIxNDktYWU4YzE4NjlmYTU3IiwibmFtZSI6Ik1hcmsiLCJ1c2VybmFtZSI6Im1hcmsiLCJyb2xlIjoiUFJJTUFSWSIsIkNvbXBhbnlJZCI6ImU1NWUwNTRiLWQ3ZDItNGZmMy05Nzk3LTFhZmZlYWJhNWNmNCIsImdyb3VwSWQiOjEwMSwiV2FsbGV0SWQiOiJkMTlhNTgzOS01Yjg1LTQ3N2YtYWQ5Yy0wYzhmODcyMzdhYzQifX0.fbyAMrnTazJ05wA1_4XmiGRs07DLhzhCVby96pZl00M'
+        break
+      case 'mary':
         accessToken =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im5hbWUiOiJNYXJ5IiwidXNlcm5hbWUiOiJtYXJ5Iiwicm9sZSI6IlNFQ09OREFSWSIsImNvbXBhbnlJZCI6NTAxLCJncm91cElkIjoxMDEsIndhbGxldElkIjoiNjAzIn19.mrHXHOcyymo3TOq7QZWIQIQKjHpY9C2y7pQ2wAwqbMY";
-        break;
-      case "lisa":
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNGNkMjBiNDYtNzkzZi00OTg0LWJkMDItODMwNDBhNjBkMDUzIiwibmFtZSI6Ik1hcnkiLCJ1c2VybmFtZSI6Im1hcnkiLCJyb2xlIjoiU0VDT05EQVJZIiwiQ29tcGFueUlkIjoiZTU1ZTA1NGItZDdkMi00ZmYzLTk3OTctMWFmZmVhYmE1Y2Y0IiwiZ3JvdXBJZCI6MTAxLCJXYWxsZXRJZCI6ImU5MzRlYjk2LTJkMjAtNDk2OS05YmQ2LTE5YTA2OTdhMDgzNyJ9fQ.1yRZr3hi8O75MMndL9TSBuddWqCXDbd9g29LF3VcztU'
+        break
+      case 'lisa':
         accessToken =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im5hbWUiOiJMaXNhIiwidXNlcm5hbWUiOiJsaXNhIiwicm9sZSI6IlBSSU1BUlkiLCJjb21wYW55SWQiOjUwMiwiZ3JvdXBJZCI6MTAzLCJ3YWxsZXRJZCI6IjYwOCJ9fQ.HheErznKHxDkmsj2h4o7vEfZ_lKXrXQJ-GFczA3Jhvo";
-        break;
-      case "danny":
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMDdiZTA2ZTYtYjExMy00ODczLTk2YTYtMGYxODUyYWE0NDk5IiwibmFtZSI6Ikxpc2EiLCJ1c2VybmFtZSI6Imxpc2EiLCJyb2xlIjoiUFJJTUFSWSIsIkNvbXBhbnlJZCI6IjE4NWI4MTFmLTlmYTMtNGU5ZS04MTE3LWE1ODdjYWMzZWZhOCIsImdyb3VwSWQiOjEwMywiV2FsbGV0SWQiOiJjNWRjYTljMi01MzNiLTQxMDAtOWNiZS03YzFkY2E3NTA4YzgifX0.rKi_xS78FpcPhmIT8ppVOxptpuDmqI4Rj0sY8HjZ2J4'
+        break
+      case 'danny':
         accessToken =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Im5hbWUiOiJEYW5ueSIsInVzZXJuYW1lIjoiZGFubnkiLCJyb2xlIjoiU0VDT05EQVJZIiwiY29tcGFueUlkIjo1MDIsImdyb3VwSWQiOjEwMywid2FsbGV0SWQiOiI2MTEifX0.MPa8WbAQTKYJVkmxrZECoCDF3jFnz1tR_vDRC3Urah8";
-        break;
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNTI1ZTI0MTktZjI0NC00MWVmLTlhYmUtMzBjOTVjNzgwMTc5IiwibmFtZSI6IkRhbm55IiwidXNlcm5hbWUiOiJkYW5ueSIsInJvbGUiOiJTRUNPTkRBUlkiLCJDb21wYW55SWQiOiIxODViODExZi05ZmEzLTRlOWUtODExNy1hNTg3Y2FjM2VmYTgiLCJncm91cElkIjoxMDMsIldhbGxldElkIjoiMDUzYWM5ZWMtOTVlZC00NGI4LWE4NjctM2U5ZDBjNjM3MDQ2In19.CNGT53k2mvZ3eWsF1BoOdjw-Ik2M_QL_Ji2a-iwwGzQ'
+        break
       default:
-        break;
+        break
     }
-    this.setUserAccessToken(accessToken);
-    return accessToken;
+    this.setUserAccessToken(accessToken)
+    return accessToken
   }
 
   setUsername(value) {
-    this.username = value;
-    return this.username;
+    this.username = value
+    return this.username
   }
 
   getUsername() {
-    return this.username;
+    return this.username
   }
 
   setPassword(value) {
-    this.password = value;
-    return this.password;
+    this.password = value
+    return this.password
   }
 
   getPassword() {
-    return this.password;
+    return this.password
   }
 
   setUserAccessToken(value) {
-    this.userAccessToken = value;
-    localStorage.setItem("userAccessToken", value);
-    return this.userAccessToken;
+    this.userAccessToken = value
+    localStorage.setItem('userAccessToken', value)
+    return this.userAccessToken
   }
 
   getUserAccessToken() {
-    let userAccessToken = this.userAccessToken;
+    let userAccessToken = this.userAccessToken
     if (!userAccessToken) {
-      userAccessToken = localStorage.getItem("userAccessToken");
+      userAccessToken = localStorage.getItem('userAccessToken')
     }
-    return userAccessToken;
+    return userAccessToken
   }
 
   setUser(value) {
-    this.user = value;
-    localStorage.setItem("user", JSON.stringify(value));
-    return this.user;
+    this.user = value
+    localStorage.setItem('user', JSON.stringify(value))
+    return this.user
   }
 
   getUser() {
-    let user = this.user;
+    let user = this.user
     if (!user) {
-      user = JSON.parse(localStorage.getItem("user"));
+      user = JSON.parse(localStorage.getItem('user'))
     }
-    return user;
+    return user
   }
 }
 
-decorate(LoginStore, {
-  username: observable,
-  password: observable,
-  userAccessToken: observable,
-  user: observable
-});
-
-export default new LoginStore();
+export default new LoginStore()

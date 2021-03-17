@@ -1,0 +1,18 @@
+{
+  "userStore": {
+    "name": "user",
+    "proximityUrl": "https://dev.monoxor.com/proximity/ewallet"
+  },
+  "companyStore": {
+    "name": "company",
+    "proximityUrl": "https://dev.monoxor.com/proximity/ewallet"
+  },
+  "walletStore": {
+    "name": "wallet",
+    "proximityUrl": "https://dev.monoxor.com/proximity/ewallet"
+  },
+  "transactionStore": {
+    "name": "transaction",
+    "proximityUrl": "https://dev.monoxor.com/proximity/ewallet"
+  }
+}
