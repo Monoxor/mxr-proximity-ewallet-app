@@ -1,18 +1,18 @@
 {
   "userStore": {
     "name": "user",
-    "proximityUrl": "https://dev.monoxor.com/proximity/ewallet"
+    "proximityUrl": "https://dev.monoxor.com/proximity-dp/ewallet"
   },
   "companyStore": {
     "name": "company",
-    "proximityUrl": "https://dev.monoxor.com/proximity/ewallet"
+    "proximityUrl": "https://dev.monoxor.com/proximity-dp/ewallet"
   },
   "walletStore": {
     "name": "wallet",
-    "proximityUrl": "https://dev.monoxor.com/proximity/ewallet"
+    "proximityUrl": "https://dev.monoxor.com/proximity-dp/ewallet"
   },
   "transactionStore": {
     "name": "transaction",
-    "proximityUrl": "https://dev.monoxor.com/proximity/ewallet"
+    "proximityUrl": "https://dev.monoxor.com/proximity-dp/ewallet"
   }
 }
