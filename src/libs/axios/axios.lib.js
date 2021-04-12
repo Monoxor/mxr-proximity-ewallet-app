@@ -12,6 +12,7 @@ const proximityAxiosInstance = axios.create()
 
 proximityAxiosInstance.interceptors.request.use(
   function (request) {
+    proximityStore.setIsUnauthorized(false)
     const access_token = loginStore.getUserAccessToken()
     if (access_token) {
       request.headers['access_token'] = access_token

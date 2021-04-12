@@ -4,7 +4,7 @@ import theme from './theme'
 import { Box, TextField, Button } from '@material-ui/core'
 import AppBar from './components/AppBar'
 import Loader from './components/Loading'
-import LoginStore from './stores/Login.store'
+import proximityStore from './stores/Proximity.store'
 import stores from './stores/Ewallet.store'
 
 const { userStore, walletStore, transactionStore } = stores
@@ -26,60 +26,65 @@ const Transfer = () => {
   const handleTransferAndTransaction = async () => {
     setIsLoading(true)
     //update from and to user balance
-    userStore.setSearchQuery({
-      username: {
-        $in: [fromUser, toUser]
-      }
-    })
-    userStore.setSearchPageNum(0)
-    userStore.setSearchPageObjectCount(2)
-    const userResponse = await userStore.objectQuery()
-    if (userResponse.rows.length === 2) {
-      const foundUserFrom = userResponse.rows.find(
-        (row) => row.username === fromUser
-      )
-      const foundUserTo = userResponse.rows.find(
-        (row) => row.username === toUser
-      )
-      walletStore.setSearchQuery({
-        UserId: {
-          $in: [foundUserFrom.id, foundUserTo.id]
+    try {
+      userStore.setSearchQuery({
+        username: {
+          $in: [fromUser, toUser]
         }
       })
-      walletStore.setSearchPageNum(0)
-      walletStore.setSearchPageObjectCount(2)
-      const walletResponse = await walletStore.objectQuery()
-      if (walletResponse.rows.length === 2) {
-        const foundWalletFrom = walletResponse.rows.find(
-          (row) => row.UserId === foundUserFrom.id
+      userStore.setSearchPageNum(0)
+      userStore.setSearchPageObjectCount(2)
+      const userResponse = await userStore.objectQuery()
+      if (userResponse.rows.length === 2) {
+        const foundUserFrom = userResponse.rows.find(
+          (row) => row.username === fromUser
         )
-        const foundWalletTo = walletResponse.rows.find(
-          (row) => row.UserId === foundUserTo.id
+        const foundUserTo = userResponse.rows.find(
+          (row) => row.username === toUser
         )
-        walletStore.setFormFields({
-          id: foundWalletFrom.id,
-          balance: foundWalletFrom.balance - amount
+        walletStore.setSearchQuery({
+          UserId: {
+            $in: [foundUserFrom.id, foundUserTo.id]
+          }
         })
-        await walletStore.objectUpdate()
-        transactionStore.setFormFields({
-          type: `Transfered to ${foundUserTo.username}`,
-          amount: amount,
-          WalletId: foundWalletFrom.id
-        })
-        await transactionStore.objectCreate()
-        walletStore.setFormFields({
-          id: foundWalletTo.id,
-          balance: foundWalletTo.balance + amount
-        })
-        await walletStore.objectUpdate()
-        transactionStore.setFormFields({
-          type: `Received from ${foundUserFrom.username}`,
-          amount: amount,
-          WalletId: foundWalletTo.id
-        })
-      }
+        walletStore.setSearchPageNum(0)
+        walletStore.setSearchPageObjectCount(2)
+        const walletResponse = await walletStore.objectQuery()
+        if (walletResponse.rows.length === 2) {
+          const foundWalletFrom = walletResponse.rows.find(
+            (row) => row.UserId === foundUserFrom.id
+          )
+          const foundWalletTo = walletResponse.rows.find(
+            (row) => row.UserId === foundUserTo.id
+          )
+          walletStore.setFormFields({
+            id: foundWalletFrom.id,
+            balance: foundWalletFrom.balance - amount
+          })
+          await walletStore.objectUpdate()
+          transactionStore.setFormFields({
+            type: message ? message : `Transfered to ${foundUserTo.username}`,
+            amount: amount,
+            WalletId: foundWalletFrom.id
+          })
+          await transactionStore.objectCreate()
+          walletStore.setFormFields({
+            id: foundWalletTo.id,
+            balance: foundWalletTo.balance + amount
+          })
+          await walletStore.objectUpdate()
+          transactionStore.setFormFields({
+            type: message ? message : `Received from ${foundUserFrom.username}`,
+            amount: amount,
+            WalletId: foundWalletTo.id
+          })
+        }
 
-      await transactionStore.objectCreate()
+        await transactionStore.objectCreate()
+      }
+    } catch (error) {
+      console.log(error)
+      setIsLoading(false)
     }
 
     setIsLoading(false)
@@ -88,10 +93,18 @@ const Transfer = () => {
   if (isLoading) {
     return <Loader />
   }
+  const isUnauthorized = proximityStore.getIsUnauthorized()
 
   return (
     <Box style={{ width: '100%', textAlign: 'left' }}>
       <AppBar />
+      {isUnauthorized ? (
+        <Box style={{ marginTop: 30, marginLeft: 30 }}>
+          <Box style={{ color: 'red', fontSize: 30 }}>Unauthorized !</Box>
+        </Box>
+      ) : (
+        ''
+      )}
       <Box
         style={{
           padding: 20,
