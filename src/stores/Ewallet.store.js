@@ -34,9 +34,21 @@ class EwalletStore {
 
   async objectCreate() {
     const data = this.getFormFields()
-    const response = await axiosRestInstance.post(`/${this.objectName}`, {
-      data: data
-    })
+    const isProximityEnabled = ProximityStore.getIsProximityEnabled()
+    const axiosInstance = isProximityEnabled
+      ? proximityAxiosInstance
+      : axiosRestInstance
+    let response = null
+    if (isProximityEnabled) {
+      response = await axiosInstance.post(`${this.proximityUrl}/${this.objectName}/create`, {
+        data: data
+      })
+    } else {
+      response = await axiosInstance.post(`/${this.objectName}`, {
+        data: data
+      })
+    }
+
     if (response.status === 200) {
       return response.data
     }

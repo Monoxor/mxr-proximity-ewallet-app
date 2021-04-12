@@ -115,7 +115,7 @@ const UserWallet = () => {
           {user.name}'s Wallet
         </Box>
         <Box style={{ marginTop: 50, fontSize: 20 }}>
-          Your balance is: ${wallet ? wallet.balance : null}
+          Your balance is: ${wallet ? wallet.balance.toFixed(2) : null}
         </Box>
         <Box style={{ marginTop: 10 }}>
           Company: {company ? company.name : null}

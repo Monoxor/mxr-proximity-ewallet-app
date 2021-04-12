@@ -8,4 +8,4 @@ services:
       - 2080:2080
     volumes:
       - ./:/app
-    # command: /bin/sleep 216000
+    command: /bin/sleep 216000
