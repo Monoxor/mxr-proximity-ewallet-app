@@ -15,7 +15,8 @@ proximityAxiosInstance.interceptors.request.use(
     proximityStore.setIsUnauthorized(false)
     const access_token = loginStore.getUserAccessToken()
     if (access_token) {
-      request.headers['access_token'] = access_token
+      request.headers['access_token'] = access_token,
+      request.headers['auth_key'] = '2f6c42bb8dd4452ab6eb61b65b59a741',
       request.headers['Content-Type'] = 'application/json'
     }
     return request
